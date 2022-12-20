@@ -173,4 +173,61 @@
                 onEnd: settings.onEnd || function(){},
                 onAnimation: settings.onAnimation || function(){}
             };
+               // This is the first part of a trick to support
+        // transparent borders using chroma filter for IE6
+        // The color below is arbitrary, lets just hope it is not used in the animation
+        ie6 && (flipObj.transparent="#123456");
+
+        $clone= $this.css("visibility","hidden")
+            .clone(true)
+			.data('flipLock',1)
+            .appendTo("body")
+            .html("")
+            .css({visibility:"visible",position:"absolute",left:flipObj.left,top:flipObj.top,margin:0,zIndex:9999,"-webkit-box-shadow":"0px 0px 0px #000","-moz-box-shadow":"0px 0px 0px #000"});
+
+        var defaultStart=function() {
+            return {
+                backgroundColor: flipObj.transparent,
+                fontSize:0,
+                lineHeight:0,
+                borderTopWidth:0,
+                borderLeftWidth:0,
+                borderRightWidth:0,
+                borderBottomWidth:0,
+                borderTopColor:flipObj.transparent,
+                borderBottomColor:flipObj.transparent,
+                borderLeftColor:flipObj.transparent,
+                borderRightColor:flipObj.transparent,
+				background: "none",
+                borderStyle:'solid',
+                height:0,
+                width:0
+            };
+        };
+        var defaultHorizontal=function() {
+            var waist=(flipObj.height/100)*25;
+            var start=defaultStart();
+            start.width=flipObj.width;
+            return {
+                "start": start,
+                "first": {
+                    borderTopWidth: 0,
+                    borderLeftWidth: waist,
+                    borderRightWidth: waist,
+                    borderBottomWidth: 0,
+                    borderTopColor: '#999',
+                    borderBottomColor: '#999',
+                    top: (flipObj.top+(flipObj.height/2)),
+                    left: (flipObj.left-waist)},
+                "second": {
+                    borderBottomWidth: 0,
+                    borderTopWidth: 0,
+                    borderLeftWidth: 0,
+                    borderRightWidth: 0,
+                    borderTopColor: flipObj.transparent,
+                    borderBottomColor: flipObj.transparent,
+                    top: flipObj.top,
+                    left: flipObj.left}
+            };
+        };
 })(jQuery);
