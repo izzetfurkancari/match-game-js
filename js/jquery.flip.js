@@ -230,4 +230,65 @@
                     left: flipObj.left}
             };
         };
+        var defaultVertical=function() {
+            var waist=(flipObj.height/100)*25;
+            var start=defaultStart();
+            start.height=flipObj.height;
+            return {
+                "start": start,
+                "first": {
+                    borderTopWidth: waist,
+                    borderLeftWidth: 0,
+                    borderRightWidth: 0,
+                    borderBottomWidth: waist,
+                    borderLeftColor: '#999',
+                    borderRightColor: '#999',
+                    top: flipObj.top-waist,
+                    left: flipObj.left+(flipObj.width/2)},
+                "second": {
+                    borderTopWidth: 0,
+                    borderLeftWidth: 0,
+                    borderRightWidth: 0,
+                    borderBottomWidth: 0,
+                    borderLeftColor: flipObj.transparent,
+                    borderRightColor: flipObj.transparent,
+                    top: flipObj.top,
+                    left: flipObj.left}
+            };
+        };
+
+        dirOptions = {
+            "tb": function () {
+                var d=defaultHorizontal();
+                d.start.borderTopWidth=flipObj.height;
+                d.start.borderTopColor=flipObj.bgColor;
+                d.second.borderBottomWidth= flipObj.height;
+                d.second.borderBottomColor= flipObj.toColor;
+                return d;
+            },
+            "bt": function () {
+                var d=defaultHorizontal();
+                d.start.borderBottomWidth=flipObj.height;
+                d.start.borderBottomColor= flipObj.bgColor;
+                d.second.borderTopWidth= flipObj.height;
+                d.second.borderTopColor= flipObj.toColor;
+                return d;
+            },
+            "lr": function () {
+                var d=defaultVertical();
+                d.start.borderLeftWidth=flipObj.width;
+                d.start.borderLeftColor=flipObj.bgColor;
+                d.second.borderRightWidth= flipObj.width;
+                d.second.borderRightColor= flipObj.toColor;
+                return d;
+            },
+            "rl": function () {
+                var d=defaultVertical();
+                d.start.borderRightWidth=flipObj.width;
+                d.start.borderRightColor=flipObj.bgColor;
+                d.second.borderLeftWidth= flipObj.width;
+                d.second.borderLeftColor= flipObj.toColor;
+                return d;
+            }
+        };
 })(jQuery);
