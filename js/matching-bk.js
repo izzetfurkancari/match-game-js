@@ -125,3 +125,55 @@ function playAudio(sAudio) {
 		audioElement.play();
 	}	
 }
+function checkMatch() {
+	
+	if(iFlippedTile === null) {
+		  
+		iFlippedTile = iTileBeingFlippedId;
+
+	} else {
+		
+		if( tiles[iFlippedTile].getBackContentImage() !== tiles[iTileBeingFlippedId].getBackContentImage()) {
+			
+			setTimeout("tiles[" + iFlippedTile + "].revertFlip()", 2000);
+			setTimeout("tiles[" + iTileBeingFlippedId + "].revertFlip()", 2000);
+			
+			playAudio("mp3/lose.wav");
+
+		} else {
+			playAudio("mp3/win.wav");
+		}
+
+		iFlippedTile = null;
+		iTileBeingFlippedId = null;
+	}
+}
+
+function onPeekComplete() {
+
+	$('div.tile').click(function() {
+	
+		iTileBeingFlippedId = this.id.substring("tile".length);
+	
+		if(tiles[iTileBeingFlippedId].getFlipped() === false) {
+			tiles[iTileBeingFlippedId].addFlipCompleteCallback(function() { checkMatch(); });
+			tiles[iTileBeingFlippedId].flip();
+		}
+	  
+	});
+}
+
+function onPeekStart() {
+	setTimeout("hideTiles( function() { onPeekComplete(); })",iPeekTime);
+}
+
+$(document).ready(function() {
+	
+	$('#startGameButton').click(function() {
+	
+		initTiles();
+		
+		setTimeout("revealTiles(function() { onPeekStart(); })",iInterval);
+
+	});
+});
