@@ -87,3 +87,41 @@ function hideTiles(callback) {
 	
 	callback();
 }
+
+function revealTiles(callback) {
+	
+	var iCounter = 0,
+		bTileNotFlipped = false;
+
+	for(iCounter = 0; iCounter < tiles.length; iCounter++) {
+		
+		if(tiles[iCounter].getFlipped() === false) {
+		
+			if(iTimer > tiles[iCounter].getStartAt()) {
+				tiles[iCounter].flip();
+			}
+			else {
+				bTileNotFlipped = true;
+			}
+		}
+	}
+	
+	iTimer = iTimer + iInterval;
+
+	if(bTileNotFlipped === true) {
+		setTimeout("revealTiles(" + callback + ")",iInterval);
+	} else {
+		callback();
+	}
+}
+
+function playAudio(sAudio) {
+	
+	var audioElement = document.getElementById('audioEngine');
+			
+	if(audioElement !== null) {
+
+		audioElement.src = sAudio;
+		audioElement.play();
+	}	
+}
