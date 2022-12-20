@@ -57,3 +57,33 @@ function initState() {
 	
 }
 
+function initTiles() {
+
+	var iCounter = 0, 
+		curTile = null;
+
+	initState();
+	
+	// Randomly create twenty tiles and render to board
+	for(iCounter = 0; iCounter < 20; iCounter++) {
+		
+		curTile = createTile(iCounter);
+		
+		$('#board').append(curTile.getHTML());
+		
+		tiles.push(curTile);
+	}	
+}
+
+function hideTiles(callback) {
+	
+	var iCounter = 0;
+
+	for(iCounter = 0; iCounter < tiles.length; iCounter++) {
+		
+		tiles[iCounter].revertFlip();
+
+	}
+	
+	callback();
+}
