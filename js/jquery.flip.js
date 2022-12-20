@@ -118,4 +118,59 @@
             $this.flip($this.data('flipRevertedSettings'));		
         });
     };
+    $.fn.flip = function(settings){
+        return this.each( function() {
+            var $this=$(this), flipObj, $clone, dirOption, dirOptions, newContent, ie6=isIE6orOlder();
+    
+            if($this.data('flipLock')){
+                return false;
+            }
+            
+            var revertedSettings = {
+                direction: (function(direction){
+                    switch(direction)
+                    {
+                    case "tb":
+                      return "bt";
+                    case "bt":
+                      return "tb";
+                    case "lr":
+                      return "rl";
+                    case "rl":
+                      return "lr";		  
+                    default:
+                      return "bt";
+                    }
+                })(settings.direction),
+                bgColor: acceptHexColor(settings.color) || "#999",
+                color: acceptHexColor(settings.bgColor) || $this.css("background-color"),
+                content: $this.html(),
+                speed: settings.speed || 500,
+                onBefore: settings.onBefore || function(){},
+                onEnd: settings.onEnd || function(){},
+                onAnimation: settings.onAnimation || function(){}
+            };
+            
+            $this
+                .data('flipRevertedSettings',revertedSettings)
+                .data('flipLock',1)
+                .data('flipSettings',revertedSettings);
+    
+            flipObj = {
+                width: $this.width(),
+                height: $this.height(),
+                bgColor: acceptHexColor(settings.bgColor) || $this.css("background-color"),
+                fontSize: $this.css("font-size") || "12px",
+                direction: settings.direction || "tb",
+                toColor: acceptHexColor(settings.color) || "#999",
+                speed: settings.speed || 500,
+                top: $this.offset().top,
+                left: $this.offset().left,
+                target: settings.content || null,
+                transparent: "transparent",
+                dontChangeColor: settings.dontChangeColor || false,
+                onBefore: settings.onBefore || function(){},
+                onEnd: settings.onEnd || function(){},
+                onAnimation: settings.onAnimation || function(){}
+            };
 })(jQuery);
