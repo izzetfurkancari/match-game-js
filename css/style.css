@@ -11,7 +11,7 @@ root {
 }
 
 body {
-	background-color: #fff;
+	background-color: rgb(72, 42, 156);
 	margin: 20px 0px 0px 0px;
 }
 
@@ -39,14 +39,14 @@ header div {
 	font-family: 'Cherry Swash', cursive;
 	font-weight: 400;
 	font-size: 30px;
-	color: rgb(20, 166, 0);
+	color: rgb(179, 90, 17);
 }
 
 #startGameButton
 {
 	font-family: 'Cherry Swash', cursive;
 	font-weight: 400;
-	color: rgb(20, 166, 0);
+	color: rgb(172, 164, 196);
 	padding-bottom: 10px;
 	display: block;
 }
