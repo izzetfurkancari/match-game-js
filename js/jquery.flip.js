@@ -97,5 +97,25 @@
         yellow:[255,255,0],
         transparent: [255,255,255]
     };
-
-})
+    var acceptHexColor=function(color) {
+        if(color && color.indexOf("#")==-1 && color.indexOf("(")==-1){
+            return "rgb("+colors[color].toString()+")";
+        } else {
+            return color;
+        }
+    };
+    
+    $.extend( $.fx.step, {
+        borderTopWidth : int_prop,
+        borderBottomWidth : int_prop,
+        borderLeftWidth: int_prop,
+        borderRightWidth: int_prop
+    });
+    
+    $.fn.revertFlip = function(){
+        return this.each( function(){
+            var $this = $(this);
+            $this.flip($this.data('flipRevertedSettings'));		
+        });
+    };
+})(jQuery);
