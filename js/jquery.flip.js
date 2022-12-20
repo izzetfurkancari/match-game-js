@@ -173,63 +173,63 @@
                 onEnd: settings.onEnd || function(){},
                 onAnimation: settings.onAnimation || function(){}
             };
-               // This is the first part of a trick to support
-        // transparent borders using chroma filter for IE6
-        // The color below is arbitrary, lets just hope it is not used in the animation
-        ie6 && (flipObj.transparent="#123456");
+                // This is the first part of a trick to support
+                // transparent borders using chroma filter for IE6
+                // The color below is arbitrary, lets just hope it is not used in the animation
+                ie6 && (flipObj.transparent="#123456");
 
-        $clone= $this.css("visibility","hidden")
-            .clone(true)
-			.data('flipLock',1)
-            .appendTo("body")
-            .html("")
-            .css({visibility:"visible",position:"absolute",left:flipObj.left,top:flipObj.top,margin:0,zIndex:9999,"-webkit-box-shadow":"0px 0px 0px #000","-moz-box-shadow":"0px 0px 0px #000"});
+                $clone= $this.css("visibility","hidden")
+                    .clone(true)
+                    .data('flipLock',1)
+                    .appendTo("body")
+                    .html("")
+                    .css({visibility:"visible",position:"absolute",left:flipObj.left,top:flipObj.top,margin:0,zIndex:9999,"-webkit-box-shadow":"0px 0px 0px #000","-moz-box-shadow":"0px 0px 0px #000"});
 
-        var defaultStart=function() {
-            return {
-                backgroundColor: flipObj.transparent,
-                fontSize:0,
-                lineHeight:0,
-                borderTopWidth:0,
-                borderLeftWidth:0,
-                borderRightWidth:0,
-                borderBottomWidth:0,
-                borderTopColor:flipObj.transparent,
-                borderBottomColor:flipObj.transparent,
-                borderLeftColor:flipObj.transparent,
-                borderRightColor:flipObj.transparent,
-				background: "none",
-                borderStyle:'solid',
-                height:0,
-                width:0
-            };
-        };
-        var defaultHorizontal=function() {
-            var waist=(flipObj.height/100)*25;
-            var start=defaultStart();
-            start.width=flipObj.width;
-            return {
-                "start": start,
-                "first": {
-                    borderTopWidth: 0,
-                    borderLeftWidth: waist,
-                    borderRightWidth: waist,
-                    borderBottomWidth: 0,
-                    borderTopColor: '#999',
-                    borderBottomColor: '#999',
-                    top: (flipObj.top+(flipObj.height/2)),
-                    left: (flipObj.left-waist)},
-                "second": {
-                    borderBottomWidth: 0,
-                    borderTopWidth: 0,
-                    borderLeftWidth: 0,
-                    borderRightWidth: 0,
-                    borderTopColor: flipObj.transparent,
-                    borderBottomColor: flipObj.transparent,
-                    top: flipObj.top,
-                    left: flipObj.left}
-            };
-        };
+                var defaultStart=function() {
+                    return {
+                        backgroundColor: flipObj.transparent,
+                        fontSize:0,
+                        lineHeight:0,
+                        borderTopWidth:0,
+                        borderLeftWidth:0,
+                        borderRightWidth:0,
+                        borderBottomWidth:0,
+                        borderTopColor:flipObj.transparent,
+                        borderBottomColor:flipObj.transparent,
+                        borderLeftColor:flipObj.transparent,
+                        borderRightColor:flipObj.transparent,
+                        background: "none",
+                        borderStyle:'solid',
+                        height:0,
+                        width:0
+                    };
+                };
+                var defaultHorizontal=function() {
+                    var waist=(flipObj.height/100)*25;
+                    var start=defaultStart();
+                    start.width=flipObj.width;
+                    return {
+                        "start": start,
+                        "first": {
+                            borderTopWidth: 0,
+                            borderLeftWidth: waist,
+                            borderRightWidth: waist,
+                            borderBottomWidth: 0,
+                            borderTopColor: '#999',
+                            borderBottomColor: '#999',
+                            top: (flipObj.top+(flipObj.height/2)),
+                            left: (flipObj.left-waist)},
+                        "second": {
+                            borderBottomWidth: 0,
+                            borderTopWidth: 0,
+                            borderLeftWidth: 0,
+                            borderRightWidth: 0,
+                            borderTopColor: flipObj.transparent,
+                            borderBottomColor: flipObj.transparent,
+                            top: flipObj.top,
+                            left: flipObj.left}
+                    };
+                };
         var defaultVertical=function() {
             var waist=(flipObj.height/100)*25;
             var start=defaultStart();
@@ -291,4 +291,43 @@
                 return d;
             }
         };
+        dirOption=dirOptions[flipObj.direction]();
+
+        // Second part of IE6 transparency trick.
+        ie6 && (dirOption.start.filter="chroma(color="+flipObj.transparent+")");
+
+        newContent = function(){
+            var target = flipObj.target;
+            return target && target.jquery ? target.html() : target;
+        };
+
+        $clone.queue(function(){
+            flipObj.onBefore($clone,$this);
+            $clone.html('').css(dirOption.start);
+            $clone.dequeue();
+        });
+
+        $clone.animate(dirOption.first,flipObj.speed);
+
+        $clone.queue(function(){
+            flipObj.onAnimation($clone,$this);
+            $clone.dequeue();
+        });
+        $clone.animate(dirOption.second,flipObj.speed);
+
+        $clone.queue(function(){
+            if (!flipObj.dontChangeColor) {
+                $this.css({backgroundColor: flipObj.toColor});
+            }
+            $this.css({visibility: "visible"});
+
+            var nC = newContent();
+            if(nC){$this.html(nC);}
+            $clone.remove();
+            flipObj.onEnd($clone,$this);
+            $this.removeData('flipLock');
+            $clone.dequeue();
+        });
+    });
+};
 })(jQuery);
